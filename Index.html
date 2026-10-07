@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eye Clinic Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; margin: 0; background: #f0f6ff; }
+    header { background: #0066cc; color: white; padding: 15px; text-align: center; }
+    nav { display: flex; flex-wrap: wrap; background: #004c99; }
+    nav button { flex: 1; padding: 12px; border: none; background: none; color: white; font-size: 13px; }
+    nav button.active { background: #003366; }
+    .section { display: none; padding: 15px; }
+    .section.active { display: block; }
+    input, textarea, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
+    label { font-weight: bold; font-size: 14px; }
+    button.save { background: #0066cc; color: white; padding: 10px; border: none; width: 100%; margin-top: 10px; }
+    .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>👁️ Eye Clinic Portal</h1>
+</header>
+
+<nav>
+  <button onclick="show('patient')" class="active">Patient</button>
+  <button onclick="show('appointment')">Appointment</button>
+  <button onclick="show('doctor')">Doctor</button>
+  <button onclick="show('diagnosis')">Diagnosis</button>
+  <button onclick="show('medication')">Meds</button>
+  <button onclick="show('spectacles')">Glasses</button>
+  <button onclick="show('review')">Review</button>
+</nav>
+
+<!-- PATIENT INFO -->
+<div id="patient" class="section active">
+  <div class="card">
+    <h2>Patient Information</h2>
+    <label>Full Name</label>
+    <input id="pName" placeholder="John Doe">
+    <label>Age</label>
+    <input id="pAge" type="number">
+    <label>Gender</label>
+    <select id="pGender"><option>Male</option><option>Female</option></select>
+    <label>Phone</label>
+    <input id="pPhone" type="tel">
+    <label>Address</label>
+    <textarea id="pAddress"></textarea>
+    <button class="save" onclick="savePatient()">Save Patient</button>
+    <p id="pSaved"></p>
+  </div>
+</div>
+
+<!-- APPOINTMENT -->
+<div id="appointment" class="section">
+  <div class="card">
+    <h2>Book Appointment</h2>
+    <label>Patient Name</label>
+    <input id="aName">
+    <label>Date</label>
+    <input id="aDate" type="date">
+    <label>Time</label>
+    <input id="aTime" type="time">
+    <label>Reason</label>
+    <textarea id="aReason"></textarea>
+    <button class="save" onclick="saveAppt()">Book Appointment</button>
+    <p id="aSaved"></p>
+  </div>
+</div>
+
+<!-- DOCTOR -->
+<div id="doctor" class="section">
+  <div class="card">
+    <h2>Doctor Profile</h2>
+    <label>Doctor Name</label>
+    <input id="dName">
+    <label>Specialty</label>
+    <input id="dSpec" placeholder="Ophthalmologist">
+    <label>License Number</label>
+    <input id="dLic">
+    <label>Contact</label>
+    <input id="dContact">
+    <button class="save" onclick="saveDoctor()">Save Doctor</button>
+    <p id="dSaved"></p>
+  </div>
+</div>
+
+<!-- DIAGNOSIS -->
+<div id="diagnosis" class="section">
+  <div class="card">
+    <h2>Diagnosis</h2>
+    <label>Patient Name</label>
+    <input id="diagPatient">
+    <label>Right Eye (OD) Findings</label>
+    <textarea id="diagOD"></textarea>
+    <label>Left Eye (OS) Findings</label>
+    <textarea id="diagOS"></textarea>
+    <label>Diagnosis</label>
+    <textarea id="diagText"></textarea>
+    <button class="save" onclick="saveDiagnosis()">Save Diagnosis</button>
+    <p id="diagSaved"></p>
+  </div>
+</div>
+
+<!-- MEDICATION -->
+<div id="medication" class="section">
+  <div class="card">
+    <h2>Medication Prescription</h2>
+    <label>Patient Name</label>
+    <input id="medPatient">
+    <label>Drug Name</label>
+    <input id="medDrug">
+    <label>Dosage</label>
+    <input id="medDose" placeholder="e.g. 1 drop twice daily">
+    <label>Duration</label>
+    <input id="medDur" placeholder="e.g. 7 days">
+    <button class="save" onclick="saveMeds()">Save Prescription</button>
+    <p id="medSaved"></p>
+  </div>
+</div>
+
+<!-- SPECTACLES -->
+<div id="spectacles" class="section">
+  <div class="card">
+    <h2>Spectacles Prescription</h2>
+    <label>Patient Name</label>
+    <input id="spPatient">
+    <h3>Right Eye (OD)</h3>
+    <input id="spODsph" placeholder="SPH">
+    <input id="spODcyl" placeholder="CYL">
+    <input id="spODaxis" placeholder="AXIS">
+    <h3>Left Eye (OS)</h3>
+    <input id="spOSsph" placeholder="SPH">
+    <input id="spOScyl" placeholder="CYL">
+    <input id="spOSaxis" placeholder="AXIS">
+    <button class="save" onclick="saveSpecs()">Save Glasses Rx</button>
+    <p id="spSaved"></p>
+  </div>
+</div>
+
+<!-- REVIEW -->
+<div id="review" class="section">
+  <div class="card">
+    <h2>Review Reminder</h2>
+    <label>Patient Name</label>
+    <input id="rPatient">
+    <label>Review Date</label>
+    <input id="rDate" type="date">
+    <label>Notes</label>
+    <textarea id="rNotes"></textarea>
+    <button class="save" onclick="saveReview()">Set Reminder</button>
+    <p id="rSaved"></p>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function save(key, msgId, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+  document.getElementById(msgId).innerText = "✅ Saved!";
+  setTimeout(() => document.getElementById(msgId).innerText = "", 2000);
+}
+
+function savePatient() {
+  save('patient', 'pSaved', {
+    name: pName.value, age: pAge.value, gender: pGender.value,
+    phone: pPhone.value, address: pAddress.value
+  });
+}
+function saveAppt() {
+  save('appt', 'aSaved', { name: aName.value, date: aDate.value, time: aTime.value, reason: aReason.value });
+}
+function saveDoctor() {
+  save('doctor', 'dSaved', { name: dName.value, spec: dSpec.value, lic: dLic.value, contact: dContact.value });
+}
+function saveDiagnosis() {
+  save('diag', 'diagSaved', { patient: diagPatient.value, od: diagOD.value, os: diagOS.value, text: diagText.value });
+}
+function saveMeds() {
+  save('meds', 'medSaved', { patient: medPatient.value, drug: medDrug.value, dose: medDose.value, dur: medDur.value });
+}
+function saveSpecs() {
+  save('specs', 'spSaved', {
+    patient: spPatient.value,
+    od: { sph: spODsph.value, cyl: spODcyl.value, axis: spODaxis.value },
+    os: { sph: spOSsph.value, cyl: spOScyl.value, axis: spOSaxis.value }
+  });
+}
+function saveReview() {
+  save('review', 'rSaved', { patient: rPatient.value, date: rDate.value, notes: rNotes.value });
+}
+</script>
+
+</body>
+      </html>
